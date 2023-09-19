@@ -16,17 +16,19 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
         self.hidden_size = config.hidden_size
+        self.number_of_type = 5
         self.embeddings = nn.Embedding(config.vocab_size, config.hidden_size)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=config.hidden_size, nhead=8)
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=6)
-        self.lin = nn.Linear(config.hidden_size+1,config.hidden_size)
+        self.lin = nn.Linear(config.hidden_size+self.number_of_type,config.hidden_size)
     def forward(self, ids, attention_mask,types):
-        embedding = self.embeddings(ids)
-        types = types.reshape((embedding.shape[0],1,1))
-        types = types.expand(types.shape[0],embedding.shape[1],1)
-        embedding = torch.cat((embedding,types),dim=2)
-        embedding =  self.lin(embedding)
-        out= self.transformer_encoder(embedding)
+        # embedding = self.embeddings(ids)
+        types = torch.nn.functional.one_hot(types, self.number_of_type)# 2 is number of type 
+        types = types.reshape((ids.shape[0],1,self.number_of_type))
+        types = types.expand(types.shape[0],ids.shape[1],self.number_of_type)
+        ids = torch.cat((ids,types),dim=2)
+        ids =  self.lin(ids)
+        out= self.transformer_encoder(ids)
         x = self.dropout(out)
         return x
 

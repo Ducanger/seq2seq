@@ -22,7 +22,7 @@ class Encoder(nn.Module):
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=6)
         self.lin = nn.Linear(config.hidden_size+self.number_of_type,config.hidden_size)
     def forward(self, ids, attention_mask,types):
-        # embedding = self.embeddings(ids)
+        ids = self.embeddings(ids)
         types = torch.nn.functional.one_hot(types, self.number_of_type)# 2 is number of type 
         types = types.reshape((ids.shape[0],1,self.number_of_type))
         types = types.expand(types.shape[0],ids.shape[1],self.number_of_type)

@@ -79,10 +79,13 @@ def read_examples(filename):
             js = json.loads(line)
             if 'idx' not in js:
                 js['idx'] = idx
-            tmp = df[df['type']==js['index']]
+            # tmp = df[df['type']==js['index']]
+            # tmp = df[df['index']==list(df['index'].unique())[0]]
+            tmp = df.loc[df['index'].isin([js['index']]), df.columns.drop(['type', 'index', 'order'])]
             if len(tmp) <= 0:
                 continue
-            ge = tmp.values[0][1:]
+            # ge = tmp.values[0][1:]
+            ge = tmp.values
             code = ' '.join(js['code_tokens']).replace('\n', ' ')
             code = ' '.join(code.strip().split())
             nl = ' '.join(js['docstring_tokens']).replace('\n', '')

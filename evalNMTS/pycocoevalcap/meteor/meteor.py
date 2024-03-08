@@ -10,8 +10,10 @@ import os
 import subprocess
 import sys
 import threading
+import errno
 
 import psutil
+
 
 # Assumes meteor-1.5.jar is in the same directory as meteor.py.  Change as needed.
 METEOR_JAR = 'meteor-1.5.jar'
@@ -41,7 +43,7 @@ class Meteor:
             mem = '1G'
 
         meteor_cmd = ['java', '-jar', '-Xmx{}'.format(mem), METEOR_JAR,
-                      '-', '-', '-stdio', '-l', 'en', '-norm']
+                      '-', '-', '-stdio', '-l', 'en', '-norm', '-a', 'data/paraphrase-en.gz']
         env = os.environ.copy()
         env['LC_ALL'] = "C"
         self.meteor_p = subprocess.Popen(meteor_cmd,

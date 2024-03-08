@@ -82,9 +82,9 @@ def read_examples(filename):
             js = json.loads(line)
             if 'idx' not in js:
                 js['idx'] = idx
-            code = ' '.join(js['code_tokens']).replace('\n', ' ')
+            code = ' '.join(js['diff']).replace('\n', ' ')
             code = ' '.join(code.strip().split())
-            nl = ' '.join(js['docstring_tokens']).replace('\n', '')
+            nl = ' '.join(js['msg_token']).replace('\n', '')
             nl = ' '.join(nl.strip().split())
             if js['index'] in mapping:
                 for k,v in mapping[js['index']].items():

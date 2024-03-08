@@ -66,11 +66,7 @@ class Example(object):
 def read_examples(filename):
     """Read examples from filename."""
     examples = []
-    with open('data/variable_change.json') as f:
-        data = json.load(f)
-        mapping = dict()
-        for k,v in data.items():
-            mapping[k.replace('file_fc_patch.csv_','')] = v
+    
     c = 0
     print('Read examples: ', filename)
     with open(filename, encoding="utf-8") as f:
@@ -86,13 +82,6 @@ def read_examples(filename):
             code = ' '.join(code.strip().split())
             nl = ' '.join(js['msg_token']).replace('\n', '')
             nl = ' '.join(nl.strip().split())
-            if js['index'] in mapping:
-                for k,v in mapping[js['index']].items():
-                    # if idx <= 5:
-                    #     print('map',k,v)
-                    if len(k) > 2: 
-                        code = code.replace(k,v)
-                        nl = nl.replace(k,v)
             
             examples.append(
                 Example(
